@@ -55,6 +55,11 @@ impl FromV8 for BigInt {
       true => num_bigint::Sign::Minus,
       false => num_bigint::Sign::Plus,
     };
+    #[cfg(target_endian = "big")]
+    {
+      words.iter_mut().for_each(|v| *v = v.rotate_left(32));
+    }
+
     // SAFETY: Because the alignment of u64 is 8, the alignment of u32 is 4, and
     // the size of u64 is 8, the size of u32 is 4, the alignment of u32 is a
     // factor of the alignment of u64, and the size of u32 is a factor of the
